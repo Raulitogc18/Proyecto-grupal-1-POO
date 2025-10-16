@@ -1,38 +1,30 @@
 public class Usuario {
+    protected int carnet;
+    protected String nombre;
+    protected String correo;
+    protected String contrasena;
 
-    private String nombre;
-    private int carnet;
-    private String correo;
-    private String contraseña;
-
-    public Usuario(String nombre, int carnet, String correo, String contraseña) {
-        this.nombre = nombre;
+    public Usuario(int carnet, String nombre) {
         this.carnet = carnet;
-        this.correo = correo;
-        this.contraseña = contraseña;
+        this.nombre = nombre;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public int getCarnet() {
-        return carnet;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public boolean login(String correo, String contraseña) {
-        return this.correo.equals(correo) && this.contraseña.equals(contraseña);
+    public boolean login() {
+        return true;
     }
 
     public void logout() {
     }
 
+    public int getCarnet() { return carnet; }
+
+    public String getNombre() { return nombre; }
+
+    public String getCorreo() { return correo; }
+
+    public void setCorreo(String correo) { this.correo = correo; }
+
+    public String getContrasena() { return contrasena; }
+
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 }
