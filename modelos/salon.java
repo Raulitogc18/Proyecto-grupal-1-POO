@@ -1,8 +1,9 @@
-public class Salon {
+package modelos;
+public class salon {
     private String ubicacion;
     private int capacidad;
 
-    public Salon(String ubicacion, int capacidad) {
+    public salon(String ubicacion, int capacidad) {
         this.ubicacion = ubicacion;
         this.capacidad = capacidad;
     }

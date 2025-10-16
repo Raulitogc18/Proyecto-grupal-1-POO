@@ -1,16 +1,22 @@
+package controller;
 import java.util.*;
+
+import modelos.Horario;
+import modelos.Usuario;
+import modelos.reserva;
+import modelos.salon;
 
 public class Controller {
     // Listas estáticas para que todos los métodos estáticos puedan usarlas
     private static List<Usuario> usuarios = new ArrayList<>();
-    private static List<Salon> salones = new ArrayList<>();
-    private static List<Reserva> reservas = new ArrayList<>();
+    private static List<salon> salones = new ArrayList<>();
+    private static List<reserva> reservas = new ArrayList<>();
 
     // 🔹 Bloque estático para precargar algunos salones
     static {
-        salones.add(new Salon("Edificio A - Sala 101", 30));
-        salones.add(new Salon("Edificio B - Laboratorio 202", 25));
-        salones.add(new Salon("Edificio C - Auditorio", 100));
+        salones.add(new salon("Biblioteca - Sala 101", 30));
+        salones.add(new salon("Biblioteca - Laboratorio 202", 25));
+        salones.add(new salon("Biblioteca - Auditorio", 100));
     }
 
     // Registrar usuario
@@ -19,13 +25,13 @@ public class Controller {
     }
 
     // Registrar salón (opcional, si quieres agregar más dinámicamente)
-    public static void registrarSalon(Salon salon) {
+    public static void registrarSalon(salon salon) {
         salones.add(salon);
     }
 
     // Crear reserva
-    public static Reserva crearReserva(Usuario usuario, Salon salon, Horario horario) {
-        Reserva r = new Reserva(usuario, salon, horario);
+    public static reserva crearReserva(Usuario usuario, salon salon, Horario horario) {
+        reserva r = new reserva(usuario, salon, horario);
         reservas.add(r);
         return r;
     }
@@ -41,14 +47,14 @@ public class Controller {
     }
 
     // Obtener lista de todos los salones
-    public static List<Salon> getSalones() {
+    public static List<salon> getSalones() {
         return salones;
     }
 
     // Obtener salones disponibles según un horario
-    public static List<Salon> getSalonesDisp(Horario horario) {
-        List<Salon> disponibles = new ArrayList<>();
-        for (Salon s : salones) {
+    public static List<salon> getSalonesDisp(Horario horario) {
+        List<salon> disponibles = new ArrayList<>();
+        for (salon s : salones) {
             if (s.disponibilidad(horario)) {
                 disponibles.add(s);
             }
@@ -61,7 +67,7 @@ public class Controller {
         return usuarios;
     }
 
-    public static List<Reserva> getReservas() {
+    public static List<reserva> getReservas() {
         return reservas;
     }
 }

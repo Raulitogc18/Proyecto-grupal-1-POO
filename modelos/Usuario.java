@@ -1,3 +1,4 @@
+package modelos;
 public class Usuario {
     protected int carnet;
     protected String nombre;
@@ -7,6 +8,10 @@ public class Usuario {
     public Usuario(int carnet, String nombre) {
         this.carnet = carnet;
         this.nombre = nombre;
+    }
+
+    public Usuario(String nombre2, String carnet2, String correo2) {
+        //TODO Auto-generated constructor stub
     }
 
     public boolean login() {
