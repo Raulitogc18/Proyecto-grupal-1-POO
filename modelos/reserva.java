@@ -1,33 +1,35 @@
 package modelos;
 
 public class reserva {
-    private static int contador = 1;
     private int id;
     private Usuario usuario;
     private salon salon;
     private Horario horario;
-
-    public reserva(Usuario usuario, salon salon, Horario horario) {
-        this.id = contador++;
+    private boolean notificado2Dias = false;
+    private boolean notificado1Hora = false;
+    
+    public reserva(Usuario usuario, salon salon) {
         this.usuario = usuario;
         this.salon = salon;
-        this.horario = horario;
+        this.id = (int) (Math.random() * 1000); // ID temporal
     }
-
-    public void modificarReserva() {
+    
+    public void modificarRes() {
+        // Lógica para modificar reserva
     }
-
-    public void cancelarReserva() {
+    
+    public void cancelarRes() {
+        // Lógica para cancelar reserva
     }
-
+    
+    // Getters y Setters
     public int getId() { return id; }
     public Usuario getUsuario() { return usuario; }
     public salon getSalon() { return salon; }
     public Horario getHorario() { return horario; }
-
-    @Override
-    public String toString() {
-        return "Reserva #" + id + " - Usuario: " + usuario.getNombre() +
-            ", Salón: " + salon.getUbicacion();
-    }
+    public void setHorario(Horario horario) { this.horario = horario; }
+    public boolean isNotificado2Dias() { return notificado2Dias; }
+    public void setNotificado2Dias(boolean notificado2Dias) { this.notificado2Dias = notificado2Dias; }
+    public boolean isNotificado1Hora() { return notificado1Hora; }
+    public void setNotificado1Hora(boolean notificado1Hora) { this.notificado1Hora = notificado1Hora; }
 }

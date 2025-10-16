@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class NotificadorController {
+public class Notificacion {
 
     public static void verificarReservas(List<reserva> reservas) {
         LocalDateTime ahora = LocalDateTime.now();
