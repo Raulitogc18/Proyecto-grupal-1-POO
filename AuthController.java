@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AuthController {
-    private static final Map<String, String> credentials = new ConcurrentHashMap<>(); // correo(lower) -> hashed password
-    private static final Map<String, String> resetTokens = new ConcurrentHashMap<>(); // correo(lower) -> token
+    private static final Map<String, String> credentials = new ConcurrentHashMap<>();
+    private static final Map<String, String> resetTokens = new ConcurrentHashMap<>();
     private static final SecureRandom rnd = new SecureRandom();
 
     public static boolean registrarCuenta(String correo, String password) {
@@ -62,7 +62,7 @@ public class AuthController {
             byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(digest);
         } catch (Exception e) {
-            // Si falla el hash, preferimos no almacenar la contraseña en claro
+            // Si falla el hash, preferimos no almacenar la contraseña
             return null;
         }
     }

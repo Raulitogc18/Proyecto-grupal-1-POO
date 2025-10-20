@@ -12,8 +12,10 @@ public class LoginGUI extends JFrame {
     public LoginGUI(Controlador controller) {
         this.controller = controller;
         setTitle("Inicio de sesión");
-        setSize(360, 200);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    
+        pack();
+        setMinimumSize(new java.awt.Dimension(420, 240));
+        setResizable(false);
         setLocationRelativeTo(null);
         initComponents();
         setVisible(true);
@@ -29,14 +31,17 @@ public class LoginGUI extends JFrame {
         txtPass = new JPasswordField();
         form.add(txtPass);
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
+
+        JPanel buttons = new JPanel(new GridLayout(2, 2, 6, 6));
         JButton btnLogin = new JButton("Iniciar sesión");
         JButton btnCrear = new JButton("Crear cuenta");
-        JButton btnOlvide = new JButton("Olvidé mi contraseña");
+        JButton btnRecuperar = new JButton("Recuperar contraseña");
+        JButton btnSalir = new JButton("Salir");
 
         buttons.add(btnLogin);
         buttons.add(btnCrear);
-        buttons.add(btnOlvide);
+        buttons.add(btnSalir);
+        buttons.add(btnRecuperar);
 
         p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         p.add(form, BorderLayout.CENTER);
@@ -45,7 +50,8 @@ public class LoginGUI extends JFrame {
 
         btnLogin.addActionListener(e -> accionLogin());
         btnCrear.addActionListener(e -> accionCrearCuenta());
-        btnOlvide.addActionListener(e -> accionOlvideContrasena());
+        btnRecuperar.addActionListener(e -> accionOlvideContrasena());
+        btnSalir.addActionListener(e -> dispose());
     }
 
     private void accionLogin() {
@@ -59,7 +65,7 @@ public class LoginGUI extends JFrame {
             if (controller != null) {
                 controller.autenticarYSetUsuario(correo, pass);
             }
-            JOptionPane.showMessageDialog(this, "Bienvenido " + correo + " ✅");
+            JOptionPane.showMessageDialog(this, "Bienvenido " + correo);
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
@@ -107,7 +113,7 @@ public class LoginGUI extends JFrame {
                 controller.registrarUsuario(u);
             }
 
-            JOptionPane.showMessageDialog(this, "Cuenta creada ✅");
+            JOptionPane.showMessageDialog(this, "Cuenta creada exitosamente");
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Carnet debe ser numérico");
         } catch (Exception ex) {
@@ -152,7 +158,7 @@ public class LoginGUI extends JFrame {
 
         boolean ok = AuthController.resetPasswordConToken(correo, tokenIngresado, nueva);
         if (ok) {
-            JOptionPane.showMessageDialog(this, "Contraseña actualizada ✅");
+            JOptionPane.showMessageDialog(this, "Contraseña actualizada");
         } else {
             JOptionPane.showMessageDialog(this, "Token inválido o expirado");
         }

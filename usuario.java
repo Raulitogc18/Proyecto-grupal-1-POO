@@ -17,17 +17,17 @@ public class usuario {
             this.correo = correo;
             this.contrasena = contrasena;
             this.loggedIn = true;
-            System.out.println("✅ Login exitoso: Bienvenido " + this.nombre);
+            System.out.println("Login exitoso: Bienvenido " + this.nombre);
             return true;
         } else {
-            System.out.println("❌ Error: Solo se permiten correos de la UVG (@uvg.edu.gt)");
+            System.out.println("Error: Solo se permiten correos de la UVG (@uvg.edu.gt)");
             return false;
         }
     }
 
     public void logOut() {
         this.loggedIn = false;
-        System.out.println("👋 Sesión cerrada: " + this.nombre);
+        System.out.println("Sesión cerrada: " + this.nombre);
     }
 
     public boolean verificarCorreoUVG() {

@@ -3,7 +3,6 @@ import javax.swing.UIManager;
 
 public class Main {
     public static void main(String[] args) {
-        // Intentar aplicar Look & Feel del sistema (no crítico si falla)
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
@@ -16,8 +15,8 @@ public class Main {
 
         // Iniciar las vistas en el hilo de Swing
         SwingUtilities.invokeLater(() -> {
-            new ProgramaGUI(controlador); // Vista ligada al controlador principal
-            new LoginGUI(controlador);   // Vista de autenticación ligada al mismo controlador
+            new ProgramaGUI(controlador);
+            new LoginGUI(controlador);
         });
     }
 }

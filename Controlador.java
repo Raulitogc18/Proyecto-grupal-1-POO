@@ -5,13 +5,11 @@ public class Controlador {
     private List<salon> salones;
     private List<reserva> reservas;
     private usuario usuarioActual;
-    private Scanner scanner;
 
     public Controlador() {
         this.usuarios = new ArrayList<>();
         this.salones = new ArrayList<>();
         this.reservas = new ArrayList<>();
-        this.scanner = new Scanner(System.in);
         inicializarSalones();
     }
 
@@ -38,164 +36,7 @@ public class Controlador {
         salones.add(s4);
     }
 
-    public void iniciarSistema() {
-        System.out.println("🎓 SISTEMA DE RESERVAS UVG 🎓");
-
-        while (true) {
-            if (usuarioActual == null) {
-                mostrarMenuLogin();
-            } else {
-                mostrarMenuPrincipal();
-            }
-        }
-    }
-
-    private void mostrarMenuLogin() {
-        System.out.println("\n=== INICIO DE SESIÓN ===");
-        System.out.print("Correo UVG: ");
-        String correo = scanner.nextLine();
-        System.out.print("Contraseña: ");
-        String contrasena = scanner.nextLine();
-
-        usuario utemp = new usuario(0, "Usuario UVG");
-        if (utemp.login(correo, contrasena)) {
-            usuarioActual = utemp;
-            usuarios.add(utemp);
-        } else {
-            System.out.println("Credenciales incorrectas.");
-        }
-    }
-
-    private void mostrarMenuPrincipal() {
-        System.out.println("\n=== MENÚ PRINCIPAL ===");
-        System.out.println("Usuario: " + (usuarioActual != null ? usuarioActual.getCorreo() : "N/A"));
-        System.out.println("1. 📚 Ver salones de biblioteca disponibles");
-        System.out.println("2. 🏢 Ver todos los salones disponibles");
-        System.out.println("3. 📅 Hacer reserva");
-        System.out.println("4. 📋 Ver mis reservas");
-        System.out.println("5. 🚪 Cerrar sesión");
-        System.out.print("Seleccione una opción: ");
-
-        int opcion = -1;
-        try {
-            opcion = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Entrada inválida.");
-            return;
-        }
-
-        switch (opcion) {
-            case 1:
-                verSalonesBiblioteca();
-                break;
-            case 2:
-                verTodosLosSalones();
-                break;
-            case 3:
-                hacerReserva();
-                break;
-            case 4:
-                verMisReservas();
-                break;
-            case 5:
-                if (usuarioActual != null) usuarioActual.logOut();
-                usuarioActual = null;
-                break;
-            default:
-                System.out.println("❌ Opción inválida");
-        }
-    }
-
-    private void verSalonesBiblioteca() {
-        System.out.println("\n=== SALONES DE BIBLIOTECA DISPONIBLES ===");
-        horario horarioAhora = new horario(new java.util.Date(), new java.util.Date());
-        List<salon> salonesBiblioteca = getSalonesBibliotecaDisp(horarioAhora);
-
-        if (salonesBiblioteca.isEmpty()) {
-            System.out.println("No hay salones de biblioteca disponibles en este horario.");
-        } else {
-            for (salon s : salonesBiblioteca) {
-                System.out.println("🏛️ " + s.getNombre());
-                System.out.println("   📍 Ubicación: " + s.getUbicacion());
-                System.out.println("   👥 Capacidad: " + s.getCapacidad() + " personas");
-                System.out.println("   ✅ Disponible");
-                System.out.println("---------------------------");
-            }
-        }
-    }
-
-    private void verTodosLosSalones() {
-        System.out.println("\n=== TODOS LOS SALONES DISPONIBLES ===");
-        horario horarioAhora = new horario(new java.util.Date(), new java.util.Date());
-        List<salon> todosSalones = getSalonesDisp(horarioAhora);
-
-        for (salon s : todosSalones) {
-            String icono = s.getUbicacion() != null && s.getUbicacion().toLowerCase().contains("biblioteca") ? "🏛️" : "🏢";
-            System.out.println(icono + " " + s.getNombre());
-            System.out.println("   📍 Ubicación: " + s.getUbicacion());
-            System.out.println("   👥 Capacidad: " + s.getCapacidad() + " personas");
-            System.out.println("---------------------------");
-        }
-    }
-
-    private void hacerReserva() {
-        System.out.println("\n=== NUEVA RESERVA ===");
-        verTodosLosSalones();
-
-        System.out.print("Ingrese el ID del salón: ");
-        int idSalon = -1;
-        try {
-            idSalon = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("ID inválido.");
-            return;
-        }
-
-        salon salonSeleccionado = null;
-        for (salon s : salones) {
-            if (s.getId() == idSalon) {
-                salonSeleccionado = s;
-                break;
-            }
-        }
-
-        if (salonSeleccionado == null) {
-            System.out.println("❌ Salón no encontrado");
-            return;
-        }
-
-        horario horarioReserva = new horario(new java.util.Date(), new java.util.Date());
-        reserva r = crearreserva(usuarioActual, salonSeleccionado, horarioReserva);
-        if (r != null) {
-            System.out.println("✅ Reserva creada exitosamente!");
-            System.out.println("📅 ID de reserva: " + r.getId());
-            System.out.println("🏛️ Salón: " + r.getSalon().getNombre());
-        }
-    }
-
-    private void verMisReservas() {
-        System.out.println("\n=== MIS RESERVAS ===");
-        List<reserva> misReservas = new ArrayList<>();
-        for (reserva r : reservas) {
-            if (r.getUsuario() != null && r.getUsuario().getCorreo() != null
-                    && usuarioActual != null
-                    && r.getUsuario().getCorreo().equals(usuarioActual.getCorreo())) {
-                misReservas.add(r);
-            }
-        }
-
-        if (misReservas.isEmpty()) {
-            System.out.println("No tienes reservas activas.");
-        } else {
-            for (reserva r : misReservas) {
-                System.out.println("📋 Reserva #" + r.getId());
-                System.out.println("   🏛️ Salón: " + r.getSalon().getNombre());
-                System.out.println("   📍 Ubicación: " + r.getSalon().getUbicacion());
-                System.out.println("---------------------------");
-            }
-        }
-    }
-
+    // Devuelve salones disponibles según la lógica del modelo (actualmente todos)
     public List<salon> getSalonesDisp(horario horario) {
         List<salon> salonesDisponibles = new ArrayList<>();
         for (salon s : salones) {
@@ -218,7 +59,7 @@ public class Controlador {
         return salonesBiblioteca;
     }
 
-    // ahora método con clases en minúscula
+    // Crear reserva (ya no requiere sesión)
     public reserva crearreserva(usuario usuario, salon salon, horario horario) {
         if (usuario == null) {
             usuario = this.usuarioActual;
@@ -248,7 +89,7 @@ public class Controlador {
         }
         return false;
     }
-    
+
     public List<reserva> getReservas() {
         return new ArrayList<>(reservas);
     }

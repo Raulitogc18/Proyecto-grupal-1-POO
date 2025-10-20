@@ -59,7 +59,7 @@ public class ProgramaGUI extends JFrame {
         btnRefrescarReservas.addActionListener(e -> refreshReservas());
         pReservasSouth.add(btnRefrescarReservas);
 
-        // Nuevo botón: Catálogo de recursos
+        // Botón Catálogo de recursos
         JButton btnCatalogo = new JButton("Catálogo de recursos");
         btnCatalogo.addActionListener(e -> {
             // abrir diálogo del catálogo (modal)
@@ -68,16 +68,29 @@ public class ProgramaGUI extends JFrame {
         });
         pReservasSouth.add(btnCatalogo);
 
-        // Nuevo botón: Eliminar reserva seleccionada
+        // Botón Eliminar reserva seleccionada
         JButton btnEliminarReserva = new JButton("Eliminar reserva");
         btnEliminarReserva.addActionListener(e -> accionEliminarReserva());
         pReservasSouth.add(btnEliminarReserva);
+
+        // Botón Finalizar y salir
+        JButton btnFinalizarSalir = new JButton("Finalizar y salir");
+        btnFinalizarSalir.addActionListener(e -> {
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "¿Desea finalizar y salir de la aplicación?",
+                    "Confirmar salida", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (opt == JOptionPane.YES_OPTION) {
+                // cerrar aplicación
+                System.exit(0);
+            }
+        });
+        pReservasSouth.add(btnFinalizarSalir);
 
         pReservas.add(pReservasSouth, BorderLayout.SOUTH);
 
         // Panel inferior: Formulario de reserva simple
         JPanel pForm = new JPanel(new GridLayout(2, 1, 6, 6));
-        pForm.setBorder(BorderFactory.createTitledBorder("Crear reserva (demo)"));
+        pForm.setBorder(BorderFactory.createTitledBorder("Crear reserva"));
 
         JPanel pInputs = new JPanel(new GridLayout(3, 2, 6, 6));
         pInputs.add(new JLabel("Correo usuario:"));
@@ -204,7 +217,7 @@ public class ProgramaGUI extends JFrame {
 
             reserva res = controller.crearreserva(u, seleccionado, horarioSeleccionado);
             if (res != null) {
-                JOptionPane.showMessageDialog(this, "Reserva creada ✅ ID: " + res.getId() + "\n" + formatHorario(horarioSeleccionado));
+                JOptionPane.showMessageDialog(this, "Reserva creada, ID: " + res.getId() + "\n" + formatHorario(horarioSeleccionado));
                 refreshReservas();
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo crear la reserva.");
@@ -266,7 +279,7 @@ public class ProgramaGUI extends JFrame {
         }
 
         // construir horario con fecha e inicio/fin
-        return new horario(inicio, inicio, fin); // uso del constructor horario(Date fecha, Date horaStart, Date horaEnd)
+        return new horario(inicio, inicio, fin);
     }
 
     private void accionEliminarReserva() {

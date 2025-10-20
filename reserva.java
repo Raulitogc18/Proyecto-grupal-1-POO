@@ -19,12 +19,10 @@ public class reserva {
     }
 
     public void modificarReserva(horario nuevoHorario) {
-        // TODO: validar conflicto con otras reservas antes de asignar
         this.horario = nuevoHorario;
     }
 
     public void cancelarReserva() {
-        // TODO: lógica adicional (notificaciones, liberar recursos, etc.)
         this.horario = null;
     }
 

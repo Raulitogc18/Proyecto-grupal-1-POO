@@ -45,7 +45,7 @@ public class salon {
     }
 
     public String getNombre() {
-        // Si no se estableció un nombre explícito, usar la ubicación como nombre
+
         return (nombre == null || nombre.trim().isEmpty()) ? ubicacion : nombre;
     }
 
@@ -53,7 +53,6 @@ public class salon {
         this.nombre = nombre;
     }
 
-    // Método para chequear disponibilidad (simulado)
     public boolean disponibilidad(horario h) {
         return true; // lógica a implementar según reservas y horario
     }

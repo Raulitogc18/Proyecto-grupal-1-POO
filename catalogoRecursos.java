@@ -45,7 +45,7 @@ public class catalogoRecursos extends JDialog {
 
         JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
         JButton btnCerrar = new JButton("Cerrar");
-        JButton btnReservar = new JButton("Solicitar recurso (demo)");
+        JButton btnReservar = new JButton("Solicitar recurso");
 
         btnCerrar.addActionListener(e -> dispose());
         btnReservar.addActionListener(e -> accionSolicitar());
@@ -80,6 +80,6 @@ public class catalogoRecursos extends JDialog {
         lista.repaint();
         detalle.setText(sel.getNombre() + "\n\nTipo: " + sel.getTipo() + "\n\n" + sel.getDescripcion()
                 + "\n\nDisponibles: " + sel.getCantidad());
-        JOptionPane.showMessageDialog(this, "Solicitud enviada (demo) para: " + sel.getNombre());
+        JOptionPane.showMessageDialog(this, "Solicitud enviada para: " + sel.getNombre());
     }
 }

@@ -21,10 +21,10 @@ public class Notificacion {
             long horasRestantes = ChronoUnit.HOURS.between(ahora, inicio);
 
             if (horasRestantes <= 48 && horasRestantes > 1) {
-                System.out.println("🔔 Recordatorio: Faltan menos de 48 horas para tu reserva del salón "
+                System.out.println("Recordatorio: Faltan menos de 48 horas para tu reserva del salón"
                         + reserva.getSalon().getNombre());
             } else if (horasRestantes <= 1 && horasRestantes >= 0) {
-                System.out.println("⚠️ Aviso: Falta 1 hora o menos para tu reserva del salón "
+                System.out.println("Aviso: Falta 1 hora o menos para tu reserva del salón"
                         + reserva.getSalon().getNombre());
             }
         }
