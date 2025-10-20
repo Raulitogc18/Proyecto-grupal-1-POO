@@ -1,24 +1,21 @@
-package modelos;
-
-public class Usuario {
-    private int camet;
+public class usuario {
+    private int carnet;
     private String nombre;
     private String correo;
-    private String contraseña;
+    private String contrasena;
     private boolean loggedIn;
-    
-    public Usuario(int camet, String nombre) {
-        this.camet = camet;
+
+    public usuario(int carnet, String nombre) {
+        this.carnet = carnet;
         this.nombre = nombre;
         this.loggedIn = false;
     }
-    
-    public boolean login(String correo, String contraseña) {
-        // Verificar que sea correo UVG
+
+    public boolean login(String correo, String contrasena) {
         if (correo != null && correo.toLowerCase().endsWith("@uvg.edu.gt")) {
-            // En un sistema real, aquí se verificaría contra una base de datos
+            // En un sistema real se validaría contra un servicio/BD y se usaría hash para la contraseña
             this.correo = correo;
-            this.contraseña = contraseña;
+            this.contrasena = contrasena;
             this.loggedIn = true;
             System.out.println("✅ Login exitoso: Bienvenido " + this.nombre);
             return true;
@@ -27,25 +24,25 @@ public class Usuario {
             return false;
         }
     }
-    
+
     public void logOut() {
         this.loggedIn = false;
         System.out.println("👋 Sesión cerrada: " + this.nombre);
     }
-    
+
     public boolean verificarCorreoUVG() {
         return correo != null && correo.toLowerCase().endsWith("@uvg.edu.gt");
     }
-    
+
     public boolean isLoggedIn() {
         return loggedIn;
     }
-    
+
     // Getters y Setters
-    public int getCamet() { return camet; }
+    public int getCarnet() { return carnet; }
     public String getNombre() { return nombre; }
     public String getCorreo() { return correo; }
     public void setCorreo(String correo) { this.correo = correo; }
-    public String getContraseña() { return contraseña; }
-    public void setContraseña(String contraseña) { this.contraseña = contraseña; }
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 }
