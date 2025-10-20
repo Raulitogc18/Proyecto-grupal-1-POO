@@ -232,6 +232,23 @@ public class Controlador {
         return r;
     }
 
+    // Eliminar reserva por objeto
+    public boolean eliminarReserva(reserva r) {
+        if (r == null) return false;
+        return reservas.remove(r);
+    }
+
+    // Eliminar reserva por id
+    public boolean eliminarReservaById(int id) {
+        for (int i = 0; i < reservas.size(); i++) {
+            if (reservas.get(i).getId() == id) {
+                reservas.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public List<reserva> getReservas() {
         return new ArrayList<>(reservas);
     }

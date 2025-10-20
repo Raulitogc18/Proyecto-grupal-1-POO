@@ -32,6 +32,7 @@ public class ProgramaGUI extends JFrame {
     private void initComponents() {
         JPanel main = new JPanel(new BorderLayout(8, 8));
 
+        // Panel izquierdo: Salones
         JPanel pSalones = new JPanel(new BorderLayout(6, 6));
         pSalones.setBorder(BorderFactory.createTitledBorder("Salones disponibles"));
         listaSalones = new JList<>(salonesModel);
@@ -42,15 +43,35 @@ public class ProgramaGUI extends JFrame {
         btnRefrescarSalones.addActionListener(e -> refreshSalones());
         pSalones.add(btnRefrescarSalones, BorderLayout.SOUTH);
 
+        // Panel derecho: Reservas
         JPanel pReservas = new JPanel(new BorderLayout(6, 6));
         pReservas.setBorder(BorderFactory.createTitledBorder("Reservas"));
         listaReservas = new JList<>(reservasModel);
         pReservas.add(new JScrollPane(listaReservas), BorderLayout.CENTER);
 
+        // Panel de botones bajo Reservas: refrescar + catálogo
+        JPanel pReservasSouth = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 6));
         JButton btnRefrescarReservas = new JButton("Refrescar reservas");
         btnRefrescarReservas.addActionListener(e -> refreshReservas());
-        pReservas.add(btnRefrescarReservas, BorderLayout.SOUTH);
+        pReservasSouth.add(btnRefrescarReservas);
 
+        // Nuevo botón: Catálogo de recursos
+        JButton btnCatalogo = new JButton("Catálogo de recursos");
+        btnCatalogo.addActionListener(e -> {
+            // abrir diálogo del catálogo (modal)
+            catalogoRecursos dialog = new catalogoRecursos(this);
+            dialog.setVisible(true);
+        });
+        pReservasSouth.add(btnCatalogo);
+
+        // Nuevo botón: Eliminar reserva seleccionada
+        JButton btnEliminarReserva = new JButton("Eliminar reserva");
+        btnEliminarReserva.addActionListener(e -> accionEliminarReserva());
+        pReservasSouth.add(btnEliminarReserva);
+
+        pReservas.add(pReservasSouth, BorderLayout.SOUTH);
+
+        // Panel inferior: Formulario de reserva simple
         JPanel pForm = new JPanel(new GridLayout(2, 1, 6, 6));
         pForm.setBorder(BorderFactory.createTitledBorder("Crear reserva (demo)"));
 
@@ -75,6 +96,7 @@ public class ProgramaGUI extends JFrame {
         pForm.add(pInputs);
         pForm.add(pActions);
 
+        // Layout principal
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pSalones, pReservas);
         split.setResizeWeight(0.6);
 
@@ -166,7 +188,36 @@ public class ProgramaGUI extends JFrame {
         }
     }
 
-    // Para probar la ventana de login directamente
+    private void accionEliminarReserva() {
+        int idx = listaReservas.getSelectedIndex();
+        if (idx < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una reserva para eliminar.");
+            return;
+        }
+
+        List<reserva> reservas = controller.getReservas();
+        if (reservas == null || reservas.isEmpty() || idx >= reservas.size()) {
+            JOptionPane.showMessageDialog(this, "Reserva inválida.");
+            refreshReservas();
+            return;
+        }
+
+        reserva sel = reservas.get(idx);
+        int opt = JOptionPane.showConfirmDialog(this,
+                "¿Eliminar reserva #" + sel.getId() + "?\nSalón: " + (sel.getSalon() != null ? sel.getSalon().getNombre() : "N/A"),
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (opt != JOptionPane.YES_OPTION) return;
+
+        boolean ok = controller.eliminarReserva(sel);
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Reserva eliminada.");
+            refreshReservas();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo eliminar la reserva.");
+        }
+    }
+
+    // Para probar la ventana de forma independiente
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Controlador ctrl = new Controlador();
