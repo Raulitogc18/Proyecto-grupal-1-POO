@@ -1,5 +1,7 @@
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
@@ -16,6 +18,8 @@ public class ProgramaGUI extends JFrame {
     private JTextField txtUsuarioCorreo;
     private JTextField txtUsuarioNombre;
     private JTextField txtUsuarioCarnet;
+
+    private final SimpleDateFormat sdfFechaHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public ProgramaGUI(Controlador controller) {
         this.controller = controller;
@@ -134,14 +138,31 @@ public class ProgramaGUI extends JFrame {
                 return;
             }
             for (reserva r : reservas) {
-                String s = String.format("reserva #%d - Usuario: %s - Salón: %s",
+                String horarioStr = "";
+                if (r.getHorario() != null) {
+                    horarioStr = " | " + formatHorario(r.getHorario());
+                }
+                String s = String.format("reserva #%d - Usuario: %s - Salón: %s%s",
                         r.getId(),
                         r.getUsuario() != null ? r.getUsuario().getCorreo() : "N/A",
-                        r.getSalon() != null ? r.getSalon().getNombre() : "N/A");
+                        r.getSalon() != null ? r.getSalon().getNombre() : "N/A",
+                        horarioStr);
                 reservasModel.addElement(s);
             }
         } catch (Exception ex) {
             reservasModel.addElement("(error al cargar reservas: " + ex.getMessage() + ")");
+        }
+    }
+
+    private String formatHorario(horario h) {
+        if (h == null) return "";
+        Date inicio = h.getHoraStart();
+        Date fin = h.getHoraEnd();
+        if (inicio == null) return "";
+        if (fin == null) {
+            return sdfFechaHora.format(inicio);
+        } else {
+            return sdfFechaHora.format(inicio) + " - " + sdfFechaHora.format(fin);
         }
     }
 
@@ -170,15 +191,20 @@ public class ProgramaGUI extends JFrame {
             return;
         }
 
+        // pedir fecha y hora al usuario (inicio y fin)
+        horario horarioSeleccionado = pedirHorario();
+        if (horarioSeleccionado == null) {
+            // usuario canceló o error en selección
+            return;
+        }
+
         try {
             usuario u = new usuario(carnet, nombre);
             u.setCorreo(correo);
 
-            horario horario = new horario(new Date(), new Date());
-
-            reserva res = controller.crearreserva(u, seleccionado, horario);
+            reserva res = controller.crearreserva(u, seleccionado, horarioSeleccionado);
             if (res != null) {
-                JOptionPane.showMessageDialog(this, "Reserva creada ✅ ID: " + res.getId());
+                JOptionPane.showMessageDialog(this, "Reserva creada ✅ ID: " + res.getId() + "\n" + formatHorario(horarioSeleccionado));
                 refreshReservas();
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo crear la reserva.");
@@ -186,6 +212,61 @@ public class ProgramaGUI extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al crear reserva: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Muestra un diálogo con dos JSpinner (inicio y fin) para que el usuario seleccione fecha+hora.
+     * Valida que fin sea posterior a inicio. Devuelve un objeto horario con fecha, horaStart y horaEnd.
+     * Devuelve null si el usuario cancela o la validación falla.
+     */
+    private horario pedirHorario() {
+        Date ahora = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(ahora);
+
+        // inicio por defecto = ahora + 30 min redondeado a 15 min
+        cal.add(Calendar.MINUTE, 30);
+        int min = cal.get(Calendar.MINUTE);
+        int rem = min % 15;
+        if (rem != 0) cal.add(Calendar.MINUTE, 15 - rem);
+        Date defaultInicio = cal.getTime();
+
+        // fin por defecto = inicio + 2 horas
+        Calendar calFin = Calendar.getInstance();
+        calFin.setTime(defaultInicio);
+        calFin.add(Calendar.HOUR_OF_DAY, 2);
+        Date defaultFin = calFin.getTime();
+
+        SpinnerDateModel modelInicio = new SpinnerDateModel(defaultInicio, null, null, Calendar.MINUTE);
+        JSpinner spinnerInicio = new JSpinner(modelInicio);
+        spinnerInicio.setEditor(new JSpinner.DateEditor(spinnerInicio, "dd/MM/yyyy HH:mm"));
+
+        SpinnerDateModel modelFin = new SpinnerDateModel(defaultFin, null, null, Calendar.MINUTE);
+        JSpinner spinnerFin = new JSpinner(modelFin);
+        spinnerFin.setEditor(new JSpinner.DateEditor(spinnerFin, "dd/MM/yyyy HH:mm"));
+
+        JPanel panel = new JPanel(new GridLayout(4, 1, 6, 6));
+        panel.add(new JLabel("Seleccione fecha y hora de inicio:"));
+        panel.add(spinnerInicio);
+        panel.add(new JLabel("Seleccione fecha y hora de fin:"));
+        panel.add(spinnerFin);
+
+        int opcion = JOptionPane.showConfirmDialog(this, panel, "Fecha y hora de reserva",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (opcion != JOptionPane.OK_OPTION) {
+            return null;
+        }
+
+        Date inicio = (Date) spinnerInicio.getValue();
+        Date fin = (Date) spinnerFin.getValue();
+
+        if (!fin.after(inicio)) {
+            JOptionPane.showMessageDialog(this, "La hora de fin debe ser posterior a la hora de inicio.");
+            return null;
+        }
+
+        // construir horario con fecha e inicio/fin
+        return new horario(inicio, inicio, fin); // uso del constructor horario(Date fecha, Date horaStart, Date horaEnd)
     }
 
     private void accionEliminarReserva() {
