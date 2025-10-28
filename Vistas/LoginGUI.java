@@ -1,5 +1,9 @@
+package Vistas;
 import java.awt.*;
 import javax.swing.*;
+
+import Controllers.AuthController;
+import Controllers.Controlador;
 
 public class LoginGUI extends JFrame {
 

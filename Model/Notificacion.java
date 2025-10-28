@@ -1,3 +1,4 @@
+package Model;
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.awt.image.BufferedImage;
@@ -17,8 +18,7 @@ public class Notificacion {
     // conjunto para evitar notificaciones repetidas para umbrales arbitrarios
     private static final Set<Integer> notifiedGeneric = ConcurrentHashMap.newKeySet();
 
-    // Verifica reservas y notifica si faltan <= umbralMinutos minutos
-    // Además notifica automáticamente a 2 días (2880 min) y 1 hora (60 min)
+    // Notifica automáticamente a 2 días (2880 min) y 1 hora (60 min)
     public static void verificarReservas(List<reserva> reservas, long umbralMinutos) {
         if (reservas == null || reservas.isEmpty()) {
             System.out.println("Notificacion: lista de reservas vacía o null");

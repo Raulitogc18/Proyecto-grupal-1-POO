@@ -1,3 +1,4 @@
+package Model;
 public class recurso {
     private String nombre;
     private String tipo;

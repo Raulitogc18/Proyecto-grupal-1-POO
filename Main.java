@@ -2,6 +2,13 @@ import java.sql.Connection;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import Controllers.AuthController;
+import Controllers.Controlador;
+import Model.Notificacion;
+import Model.conexion;
+import Vistas.LoginGUI;
+import Vistas.ProgramaGUI;
+
 public class Main {
 
     public static void main(String[] args) {

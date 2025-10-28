@@ -1,4 +1,11 @@
+package Controllers;
 import java.util.*;
+
+import Model.ReservaDAO;
+import Model.horario;
+import Model.reserva;
+import Model.salon;
+import Model.usuario;
 
 public class Controlador {
     private List<usuario> usuarios;

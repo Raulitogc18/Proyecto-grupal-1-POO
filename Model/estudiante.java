@@ -1,3 +1,4 @@
+package Model;
 public class estudiante {
     private int carnet;
     private String nombre;

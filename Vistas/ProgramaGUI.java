@@ -1,3 +1,4 @@
+package Vistas;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -5,6 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
+
+import Controllers.Controlador;
+import Model.catalogoRecursos;
+import Model.horario;
+import Model.reserva;
+import Model.salon;
+import Model.usuario;
 
 public class ProgramaGUI extends JFrame {
 

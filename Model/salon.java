@@ -1,3 +1,4 @@
+package Model;
 public class salon {
     private int id;
     private String nombre;
