@@ -5,12 +5,25 @@ public class Controlador {
     private List<salon> salones;
     private List<reserva> reservas;
     private usuario usuarioActual;
+    private ReservaDAO reservaDAO;
 
     public Controlador() {
         this.usuarios = new ArrayList<>();
         this.salones = new ArrayList<>();
-        this.reservas = new ArrayList<>();
+        this.reservas = Collections.synchronizedList(new ArrayList<>());
+        this.reservaDAO = new ReservaDAO();
         inicializarSalones();
+        cargarReservasDesdeBD();
+    }
+
+    private void cargarReservasDesdeBD() {
+        try {
+            List<reserva> desdeBD = reservaDAO.listarTodas();
+            reservas.clear();
+            reservas.addAll(desdeBD);
+        } catch (Exception e) {
+            System.err.println("Error cargando reservas desde BD: " + e.getMessage());
+        }
     }
 
     private void inicializarSalones() {
@@ -59,18 +72,21 @@ public class Controlador {
         return salonesBiblioteca;
     }
 
-    // Crear reserva (ya no requiere sesión)
     public reserva crearreserva(usuario usuario, salon salon, horario horario) {
-        if (usuario == null) {
-            usuario = this.usuarioActual;
-        }
-        if (usuario == null) {
-            usuario = new usuario(0, "Invitado");
-        }
+        if (usuario == null || salon == null) return null;
         registrarUsuario(usuario);
         reserva r = new reserva(usuario, salon, horario);
-        reservas.add(r);
-        return r;
+        try {
+            if (reservaDAO.insertar(r)) {
+                reservas.add(r);
+                return r;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Eliminar reserva por objeto
@@ -91,10 +107,12 @@ public class Controlador {
     }
 
     public List<reserva> getReservas() {
-        return new ArrayList<>(reservas);
+        // Devolver la referencia a la lista compartida para que Notificacion vea
+        // cambios en tiempo real. La lista ya es synchronizedList.
+        return reservas;
     }
 
-    // Permite registrar un usuario en la lista (si no existe)
+
     public void registrarUsuario(usuario u) {
         if (u == null) return;
         boolean existe = usuarios.stream()
@@ -108,7 +126,7 @@ public class Controlador {
         registrarUsuario(u);
     }
 
-    // Intenta autenticar usando AuthController y, si OK, establece usuarioActual
+    // Intenta autenticar usando AuthController y, si sí, establece usuarioActual
     public boolean autenticarYSetUsuario(String correo, String password) {
         if (!AuthController.autenticar(correo, password)) return false;
         usuario u = null;

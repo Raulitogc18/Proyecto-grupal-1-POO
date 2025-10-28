@@ -279,7 +279,7 @@ public class ProgramaGUI extends JFrame {
         }
 
         // construir horario con fecha e inicio/fin
-        return new horario(inicio, inicio, fin);
+        return new horario(inicio, fin);  // Solo usar dos parámetros
     }
 
     private void accionEliminarReserva() {
